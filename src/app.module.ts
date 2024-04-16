@@ -12,6 +12,7 @@ import { User } from "./users/entities/user.entity";
 import { Question } from "./questions/entities/question.entity";
 import { Quiz } from "./quizzes/entities/quiz.entity";
 import { Option } from "./options/entities/option.entity";
+import { AuthenticationModule } from './authentication/authentication.module';
 
 dotenv.config();
 @Module({
@@ -32,6 +33,7 @@ dotenv.config();
         synchronize:true,
       }
     ),
+    AuthenticationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

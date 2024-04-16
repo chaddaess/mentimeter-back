@@ -4,7 +4,7 @@ import { Quiz } from "../../quizzes/entities/quiz.entity";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Column({ nullable: true })
   email: string;
@@ -13,13 +13,11 @@ export class User {
   password: string; // Remember to hash and salt this
 
   @Column({ nullable: true })
-  googleId: string;
+  googleId?: string;
 
-  @Column()
-  salt:string
   @OneToMany(
     ()=>Quiz,
     (quiz:Quiz)=>quiz.user
   )
-  quizzes:Quiz[]
+  quizzes?:Quiz[]
 }
