@@ -3,17 +3,23 @@ import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { User } from "../users/entities/user.entity";
 import { AuthGuard } from "@nestjs/passport";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
+
 
 @Controller('authentication')
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
+  @ApiTags('authentication')
+  @ApiOperation({ summary: 'Creating an account' })
   @Post('/register')
   public  register(@Body() createUser:CreateUserDto):Promise<User>{
      return  this.authenticationService.register(createUser)
   }
 
-  @Get('/login')
+  @ApiTags('authentication')
+  @ApiOperation({ summary: 'Logging in'})
+  @Post('/login')
   public login (@Body() createUser:CreateUserDto) {
     return this.authenticationService.login(createUser)
 
@@ -23,6 +29,8 @@ export class AuthenticationController {
    * Endpoint  to login/register with Google
    * @param req
    */
+  @ApiTags('authentication')
+  @ApiOperation({ summary: 'Authenticate with Google', description: 'You need to run this in your BROWSER' })
   @Get('google/login')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req:any) { }
