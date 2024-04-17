@@ -57,6 +57,6 @@ To document the endpoint , annotate it like so
 ````
 Finally to visualise the Swagger UI run the following  endpoint in your browser
 ````js
-http://localhost:3000/document
+"http://localhost:3000/document"
 ````
 
