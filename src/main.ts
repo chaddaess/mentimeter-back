@@ -2,9 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from "dotenv"
 import * as process from "process";
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from "@nestjs/common";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AuthenticationModule } from "./authentication/authentication.module";
+dotenv.config();
 dotenv.config()
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,7 +15,6 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('authentication')
     .build();
-  // const document = SwaggerModule.createDocument(app, config);
   const document = SwaggerModule.createDocument(app,config, {
     include: [AuthenticationModule],
   });
