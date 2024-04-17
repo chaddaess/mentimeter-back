@@ -6,6 +6,7 @@ import { CreateUserDto } from "../users/dto/create-user.dto";
 import * as bcrypt from 'bcrypt';
 import { response } from "express";
 import { JwtService } from "@nestjs/jwt";
+import * as jwt from 'jsonwebtoken'
 
 @Injectable()
 export class AuthenticationService {
@@ -50,6 +51,29 @@ export class AuthenticationService {
     const jwt:string=this.jwtService.sign(payload);
     return{
       "access-token":jwt, }
+  }
+
+  async googleLogin(req:any) {
+    if (!req.user) {
+      throw new InternalServerErrorException("an error occured while connecting to google ! ")
+    }
+    let user_info = req.user
+    let existUser:User=await this.userRepository.findOneBy({email:user_info.email})
+    if(!existUser){
+      let user: User = new User();
+      user.email = user_info.email;
+      user.googleId = user_info.id;
+      await this.userRepository.save(user)
+    }
+    let email=existUser?existUser.email:user_info.email;
+    let payload={
+      email:email,
+    }
+    const jwt:string=this.jwtService.sign(payload);
+    return{
+      "access-token":jwt
+    }
+
   }
 }
 

@@ -16,6 +16,6 @@ export class CreateUserDto {
       message: "the length of your  $property ($value) is inferior to the minimum length required ($constraint1)"
     }
   )
-  password:string;
+  password?:string;
 
 }

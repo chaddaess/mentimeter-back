@@ -10,7 +10,7 @@ export class User {
   email: string;
 
   @Column({ nullable: true })
-  password: string; // Remember to hash and salt this
+  password?: string; // Remember to hash and salt this
 
   @Column({ nullable: true })
   googleId?: string;

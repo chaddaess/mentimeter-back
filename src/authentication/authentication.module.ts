@@ -8,11 +8,12 @@ import { JwtModule } from "@nestjs/jwt";
 import * as process from "process";
 import * as dotenv from "dotenv"
 import { JwtStrategy } from "./strategies/passport-jwt-strategy";
+import { GoogleStrategy } from "./strategies/passport-google.strategy";
 dotenv.config();
 
 @Module({
   controllers: [AuthenticationController],
-  providers: [AuthenticationService,JwtStrategy],
+  providers: [AuthenticationService,JwtStrategy,GoogleStrategy],
   imports:[
     TypeOrmModule.forFeature([User]),
     PassportModule.register({

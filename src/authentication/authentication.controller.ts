@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { User } from "../users/entities/user.entity";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -17,9 +18,24 @@ export class AuthenticationController {
     return this.authenticationService.login(createUser)
 
   }
-  @Get('/success')
-  public redirectSuccess(){
-    return "authorization successful"
+
+  /**
+   * Endpoint  to login/register with Google
+   * @param req
+   */
+  @Get('google/login')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req:any) { }
+
+  /**
+   * Callback endpoint upon a successful authentication with Google
+   * @param req
+   * @return jwt token
+   */
+  @Get('success')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Req() req:any) {
+    return this.authenticationService.googleLogin(req)
   }
 
 }
