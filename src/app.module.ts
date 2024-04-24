@@ -13,6 +13,7 @@ import { Question } from "./questions/entities/question.entity";
 import { Quiz } from "./quizzes/entities/quiz.entity";
 import { Option } from "./options/entities/option.entity";
 import { AuthenticationModule } from './authentication/authentication.module';
+import { CommonModuleTsModule } from './common.module.ts/common.module.ts.module';
 
 dotenv.config();
 @Module({
@@ -34,6 +35,7 @@ dotenv.config();
       }
     ),
     AuthenticationModule,
+    CommonModuleTsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
