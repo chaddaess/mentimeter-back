@@ -29,6 +29,7 @@ export class CrudService<Entity extends HasId> {
     }
     return result;
   }
+  
   async restore(id: string): Promise<UpdateResult> {
     const result = await this.repository.restore(id);
     if (!result.affected) {
