@@ -14,6 +14,7 @@ import { Quiz } from "./quizzes/entities/quiz.entity";
 import { Option } from "./options/entities/option.entity";
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CommonModule } from './common/common.module';
+import { UserAnswerModule } from './user-answer/user-answer.module';
 
 dotenv.config();
 @Module({
@@ -36,6 +37,7 @@ dotenv.config();
     ),
     AuthenticationModule,
     CommonModule,
+    UserAnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
