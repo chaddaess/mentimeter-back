@@ -13,8 +13,7 @@ import { Question } from "./questions/entities/question.entity";
 import { Quiz } from "./quizzes/entities/quiz.entity";
 import { Option } from "./options/entities/option.entity";
 import { AuthenticationModule } from './authentication/authentication.module';
-import { UserAnswerModule } from './user-answer/user-answer.module';
-import {UserAnswer} from "./user-answer/entities/user-answer.entity";
+import { CommonModule } from './common/common.module';
 
 dotenv.config();
 @Module({
@@ -27,15 +26,16 @@ dotenv.config();
       {
         'type':"mysql",
         host:"localhost",
-        port:3306, database:"mentimeter_db",
-        username:'root',
-        password:'',
-        entities:[User,Question,Quiz,Option,UserAnswer],
+        port:3306,
+        username:process.env.DB_USERNAME,
+        password:process.env.DB_PASSWORD,
+        database:process.env.DB_NAME,
+        entities:[User,Question,Quiz,Option],
         synchronize:true,
       }
     ),
     AuthenticationModule,
-    UserAnswerModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

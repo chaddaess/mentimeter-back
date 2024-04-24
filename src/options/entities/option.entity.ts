@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Question } from "../../questions/entities/question.entity";
 
 @Entity()
@@ -9,6 +9,9 @@ export class Option {
   @Column()
   label:string;
 
+  @DeleteDateColumn()
+  deletedAt: Date;
+  
   @Column()
   isCorrect:boolean;
   @ManyToOne(

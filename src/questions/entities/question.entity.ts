@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Quiz } from "../../quizzes/entities/quiz.entity";
 import { Option } from "../../options/entities/option.entity";
 
@@ -10,6 +10,9 @@ export class Question {
   @Column()
   text:string
 
+  @DeleteDateColumn()
+  deletedAt: Date;
+  
   @ManyToOne(
     ()=>Quiz,
     (quiz:Quiz)=>quiz.questions
