@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { response } from "express";
 import { JwtService } from "@nestjs/jwt";
 import * as jwt from 'jsonwebtoken'
+import { isAlphanumeric } from "class-validator";
 
 @Injectable()
 export class AuthenticationService {
@@ -49,8 +50,16 @@ export class AuthenticationService {
       email:user.email,
     }
     const jwt:string=this.jwtService.sign(payload);
+    let i:number=0
+    let username:string=""
+    while( i < user.email.length && isAlphanumeric(user.email[i])) {
+        username+=user.email[i];
+        i++;
+    }
     return{
-      "access-token":jwt, }
+      "access-token":jwt,
+      "username":username,
+    }
   }
 
   async googleLogin(req:any) {
@@ -69,9 +78,17 @@ export class AuthenticationService {
     let payload={
       email:email,
     }
+    let i:number=0
+    let username:string=""
+    while( i < email.length && isAlphanumeric(email[i])) {
+      username+=email[i];
+      i++;
+    }
     const jwt:string=this.jwtService.sign(payload);
     return{
-      "access-token":jwt
+      "access-token":jwt,
+      "username":username,
+
     }
 
   }
