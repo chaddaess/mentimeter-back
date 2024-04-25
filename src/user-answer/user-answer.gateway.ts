@@ -18,7 +18,7 @@ export class UserAnswerGateway {
   }
 
   @SubscribeMessage('findOneUserAnswer')
-  findOne(@MessageBody() id: number) {
+  findOne(@MessageBody() id: string) {
     return this.userAnswerService.findOne(id);
   }
 
@@ -28,7 +28,7 @@ export class UserAnswerGateway {
   }
 
   @SubscribeMessage('removeUserAnswer')
-  remove(@MessageBody() id: number) {
+  remove(@MessageBody() id: string) {
     return this.userAnswerService.remove(id);
   }
 }
