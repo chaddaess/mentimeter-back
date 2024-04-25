@@ -2,9 +2,11 @@ import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websock
 import { UserAnswerService } from './user-answer.service';
 import { CreateUserAnswerDto } from './dto/create-user-answer.dto';
 import { UpdateUserAnswerDto } from './dto/update-user-answer.dto';
+import { SocketSessions } from 'src/web-socket/socket-session-manager.service'
 
 @WebSocketGateway()
 export class UserAnswerGateway {
+  private readonly socketSessions: SocketSessions,
   constructor(private readonly userAnswerService: UserAnswerService) {}
 
   @SubscribeMessage('createUserAnswer')
