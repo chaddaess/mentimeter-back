@@ -1,6 +1,8 @@
 import { Column, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Quiz } from "../../quizzes/entities/quiz.entity";
 import { Option } from "../../options/entities/option.entity";
+import {IsEnum, IsNotEmpty} from "class-validator";
+import {Topic, Topics} from "../topics.enum";
 
 @Entity()
 export class Question {
@@ -8,7 +10,7 @@ export class Question {
   id: string;
 
   @Column()
-  text:string
+  text:string;
 
   @DeleteDateColumn()
   deletedAt: Date;
@@ -17,10 +19,17 @@ export class Question {
     ()=>Quiz,
     (quiz:Quiz)=>quiz.questions
   )
-  quiz:Quiz
+  quiz:Quiz;
   @OneToMany(
     ()=>Option,
     (option:Option)=>option.question
   )
-  options:Option[]
+  options:Option[];
+
+  @Column({ nullable: false })
+  correctAnswer: string
+  @IsEnum(Topics)
+  @IsNotEmpty()
+  topics: Topic[];
+
 }
