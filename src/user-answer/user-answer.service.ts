@@ -15,4 +15,9 @@ export class UserAnswerService extends CrudService<UserAnswer>{
   ) {
     super(userAnswerRepository);
   }
+
+
+    async handleUserAnswer(data: any): Promise<void> {
+        // Logique de gestion des réponses des utilisateurs
+    }
 }

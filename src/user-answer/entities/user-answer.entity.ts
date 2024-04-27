@@ -10,13 +10,15 @@ export class UserAnswer {
     id: string;
 
     @OneToOne(() => User, { nullable: true })
-    user: User;
+    user?: User;
 
     @ManyToOne(() => Option)
     answer: Option;
 
     @OneToOne(() => Quiz, { nullable: true })
     quiz: Quiz;
+    @OneToOne(() => Question, { nullable: true })
+    question: Question;
 
     @Column({ nullable: true })
     pseudo: string;

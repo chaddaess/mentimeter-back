@@ -6,7 +6,7 @@ import {Quiz} from "../../quizzes/entities/quiz.entity";
 export class CreateUserAnswerDto {
     id: string;
 
-    user: User;
+   pseudo: string;
 
     answer: Option;
 

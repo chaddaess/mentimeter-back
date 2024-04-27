@@ -1,6 +1,6 @@
 import {Option} from "../../options/entities/option.entity";
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsEnum, IsNotEmpty, IsString, ValidateBy, ValidateNested } from 'class-validator'
-import {Topic, Topics} from "../topics.enum";
+import {Topic, Topics} from "../../quizzes/topics.enum";
 
 export class CreateQuestionDto {
     @IsString()
@@ -26,8 +26,5 @@ export class CreateQuestionDto {
 @IsString()
 @IsNotEmpty()
 correctAnswer: string
-    @IsEnum(Topics)
-    @IsNotEmpty()
-    topic: Topic
 
 }

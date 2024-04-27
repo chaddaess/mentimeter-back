@@ -31,4 +31,8 @@ export class Quiz {
     (question:Question)=>question.quiz,
   )
   questions:Question[]
+
+  getId() {
+    return this.id;
+  }
 }
