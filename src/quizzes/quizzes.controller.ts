@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Inject } from "@nestjs/common";
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
-import { JwtAuthGuard } from "../authentication/Guards/jwt-auth.guard";
+
 
 @Controller('quizzes')
 export class QuizzesController {
-  constructor(private readonly quizzesService: QuizzesService) {}
+  constructor(@Inject(QuizzesService) private quizzesService: QuizzesService) {}
 
   @Post()
   create(@Body() createQuizDto: CreateQuizDto) {
@@ -20,16 +20,16 @@ export class QuizzesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.quizzesService.findOne(+id);
+    return this.quizzesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateQuizDto: UpdateQuizDto) {
-    return this.quizzesService.update(+id, updateQuizDto);
+    return this.quizzesService.update(id, updateQuizDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.quizzesService.remove(+id);
+    return this.quizzesService.remove(id);
   }
 }
