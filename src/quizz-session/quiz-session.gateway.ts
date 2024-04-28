@@ -5,7 +5,7 @@ import { UpdateQuizSessionDto } from './dto/update-quiz-session.dto';
 import {QuizzesService} from "../quizzes/quizzes.service";
 import {Server} from "socket.io";
 
-@WebSocketGateway({cors:true})
+@WebSocketGateway(3001,{cors:true})
 export class QuizSessionGateway {
 
 
