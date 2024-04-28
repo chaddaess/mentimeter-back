@@ -7,7 +7,7 @@ import {Socket} from "socket.io";
 import {Quiz} from "../quizzes/entities/quiz.entity";
 import {User} from "../users/entities/user.entity";
 
-@WebSocketGateway(3001)
+@WebSocketGateway(3002)
 export class UserAnswerGateway {
   private readonly socketSessions: SocketSessions[];
   private quiz : Quiz;
