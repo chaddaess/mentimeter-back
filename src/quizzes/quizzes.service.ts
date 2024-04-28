@@ -12,4 +12,22 @@ export class QuizzesService extends CrudService<Quiz>{
   ) {
       super(quizRepository);
   }
+
+    joinQuiz(quizCode: string, playerId: string, playerName: string): boolean {
+        const quiz = this.findOne(quizCode);
+        if (quiz && !quiz.started) {
+            quiz.players.push({ playerId, playerName, score: 0 });
+            return true;
+        }
+        return false;
+    }
+
+    startQuiz(quizCode: string): any[] {
+        const quiz = this.quizzes.get(quizCode);
+        if (quiz) {
+            quiz.started = true;
+            return quiz.questions; // Send the questions to all players
+        }
+        return [];
+    }
 }
