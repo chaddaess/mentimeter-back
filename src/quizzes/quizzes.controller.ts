@@ -19,8 +19,9 @@ export class QuizzesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.quizzesService.findOne(id);
+  async findOneWithQuestions(@Param('id') id: string) {
+    const quiz=await this.quizzesService.findOne(id);
+    return quiz.questions;
   }
 
   @Patch(':id')
