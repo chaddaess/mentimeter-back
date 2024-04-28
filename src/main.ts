@@ -9,6 +9,7 @@ dotenv.config();
 dotenv.config()
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({ origin: '*' });
   const config = new DocumentBuilder()
     .setTitle('Mentimeter API')
     .setDescription('This API provides all the functionalities of the quiz app ')
