@@ -29,7 +29,6 @@ export class UserAnswerGateway {
       return;
     }
     // Associate the socket with the quiz ID and pseudonym
-    this.socketSessions.setSocket( pseudo, socket);
   }
   @SubscribeMessage('createUserAnswer')
   create(@MessageBody() createUserAnswerDto: CreateUserAnswerDto) {

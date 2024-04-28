@@ -14,9 +14,9 @@ export class QuizSessionGateway {
 
   constructor(private readonly quizzSessionService: QuizSessionService) {}
 
-  @SubscribeMessage('createQuizzSession')
-  create(@MessageBody() createQuizzSessionDto: CreateQuizSessionDto) {
-    return this.quizzSessionService.create(createQuizzSessionDto);
+  @SubscribeMessage('createQuizSession')
+  create(@MessageBody() createQuizSessionDto: CreateQuizSessionDto) {
+    return this.quizzSessionService.createQuiz(createQuizSessionDto);
   }
 
   @SubscribeMessage('findAllQuizzSession')
@@ -25,8 +25,8 @@ export class QuizSessionGateway {
   }
 
   @SubscribeMessage('findOneQuizzSession')
-  findOne(@MessageBody() id: number) {
-    return this.quizzSessionService.findOne(id);
+  findOne(@MessageBody() code: string) {
+    return this.quizzSessionService.findOne(code);
   }
 
   @SubscribeMessage('updateQuizzSession')
