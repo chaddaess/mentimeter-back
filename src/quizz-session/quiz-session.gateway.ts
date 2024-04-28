@@ -12,41 +12,41 @@ export class QuizSessionGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly quizzSessionService: QuizSessionService) {}
+  constructor(private readonly quizSessionService: QuizSessionService) {}
 
   @SubscribeMessage('createQuizSession')
   create(@MessageBody() createQuizSessionDto: CreateQuizSessionDto) {
-    return this.quizzSessionService.createQuiz(createQuizSessionDto);
+    return this.quizSessionService.createQuiz(createQuizSessionDto);
   }
 
-  @SubscribeMessage('findAllQuizzSession')
+  @SubscribeMessage('findAllQuizSession')
   findAll() {
-    return this.quizzSessionService.findAll();
+    return this.quizSessionService.findAll();
   }
 
-  @SubscribeMessage('findOneQuizzSession')
+  @SubscribeMessage('findOneQuizSession')
   findOne(@MessageBody() code: string) {
-    return this.quizzSessionService.findOne(code);
+    return this.quizSessionService.findOne(code);
   }
 
-  @SubscribeMessage('updateQuizzSession')
-  update(@MessageBody() updateQuizzSessionDto: UpdateQuizSessionDto) {
-    return this.quizzSessionService.update(updateQuizzSessionDto.id, updateQuizzSessionDto);
+  @SubscribeMessage('updateQuizSession')
+  update(@MessageBody() updateQuizSessionDto: UpdateQuizSessionDto) {
+    return this.quizSessionService.update(updateQuizSessionDto.id, updateQuizSessionDto);
   }
 
-  @SubscribeMessage('removeQuizzSession')
+  @SubscribeMessage('removeQuizSession')
   remove(@MessageBody() id: number) {
-    return this.quizzSessionService.remove(id);
+    return this.quizSessionService.remove(id);
   }
 
   @SubscribeMessage('joinQuiz')
   handleJoinQuiz(@ConnectedSocket() client: any, @MessageBody() data: { quizCode: string, playerName: string }): void {
     const { quizCode, playerName } = data;
-    const result = this.quizService.joinQuiz(quizCode, client.id, playerName);
+    const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName);
     if (result) {
       client.join(quizCode);
       this.server.to(quizCode).emit('playerJoined', { id: client.id, playerName });
     } else {
       client.emit('errorMsg', 'Failed to join quiz.');
     }
-}
+}}

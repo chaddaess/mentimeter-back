@@ -20,17 +20,18 @@ export class QuizSessionService {
 
   joinQuiz(quizCode: string, playerId: string, playerName: string): boolean {
     const quiz = this.quizzes.get(quizCode);
-    if (quiz && !quiz.started) {
-      quiz.players.push({ playerId, playerName, score: 0 });
+    if (quiz && !quiz.hasStarted) {
+      quiz.players.push({ pseudo:playerName, avatar : "",answers:[],score: 0 });
       return true;
     }
     return false;
   }
 
   startQuiz(quizCode: string): any[] {
-    const quiz = this.quizzes.get(quizCode);
+    const quizSession:QuizSession = this.quizzes.get(quizCode);
+    let quiz=quizSession.quiz;
     if (quiz) {
-      quiz.started = true;
+      quizSession.hasStarted = true;
       return quiz.questions; // Send the questions to all players
     }
     return [];
@@ -43,5 +44,13 @@ export class QuizSessionService {
     if(!this.quizzes[code])
       return
     return
+  }
+
+  remove(id: number) {
+
+  }
+
+  update(id: number, updateQuizSessionDto: UpdateQuizSessionDto) {
+
   }
 }
