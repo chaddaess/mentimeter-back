@@ -1,52 +1,56 @@
-import {WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket} from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 import { QuizSessionService } from './quiz-session.service';
-import { CreateQuizSessionDto } from './dto/create-quiz-session.dto';
-import { UpdateQuizSessionDto } from './dto/update-quiz-session.dto';
-import {QuizzesService} from "../quizzes/quizzes.service";
-import {Server} from "socket.io";
+import {QuizSession} from "./entities/quiz-session.entity";
 
-@WebSocketGateway(3001,{cors:true})
+@WebSocketGateway(3001)
 export class QuizSessionGateway {
-
+  private quizzes =new Map();
+  constructor(private readonly quizSessionService: QuizSessionService) {}
 
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly quizSessionService: QuizSessionService) {}
-
   @SubscribeMessage('createQuizSession')
-  create(@MessageBody() createQuizSessionDto: CreateQuizSessionDto) {
-    return this.quizSessionService.createQuiz(createQuizSessionDto);
+  handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket,): any{
+    console.log("hellooooooooooo");
+    const session = this.quizSessionService.createQuiz(createQuizSessionDto);
+    return session;
   }
 
   @SubscribeMessage('findAllQuizSession')
-  findAll() {
-    return this.quizSessionService.findAll();
+  handleFindAllQuizSession(@ConnectedSocket() client: Socket): any {
+    console.log("le ileha ella lah")
+    const sessions = this.quizSessionService.findAll();
+    console.log(sessions);
+    const jsonResult = {};
+    sessions.forEach(function (value, key) {
+      jsonResult[key] = value;
+    });
+    return  jsonResult;
   }
 
   @SubscribeMessage('findOneQuizSession')
-  findOne(@MessageBody() code: string) {
-    return this.quizSessionService.findOne(code);
-  }
-
-  @SubscribeMessage('updateQuizSession')
-  update(@MessageBody() updateQuizSessionDto: UpdateQuizSessionDto) {
-    return this.quizSessionService.update(updateQuizSessionDto.id, updateQuizSessionDto);
+  handleFindOneQuizSession(@MessageBody() code: string, @ConnectedSocket() client: Socket): void {
+    const session = this.quizSessionService.findOne(code,this.quizzes);
+    client.emit('sessionDetail', session);
   }
 
   @SubscribeMessage('removeQuizSession')
-  remove(@MessageBody() id: number) {
-    return this.quizSessionService.remove(id);
+  handleRemoveQuizSession(@MessageBody() id: string, @ConnectedSocket() client: Socket): void {
+    const result = this.quizSessionService.remove(id,this.quizzes);
+    client.emit('sessionRemoved', result);
   }
 
   @SubscribeMessage('joinQuiz')
-  handleJoinQuiz(@ConnectedSocket() client: any, @MessageBody() data: { quizCode: string, playerName: string }): void {
-    const { quizCode, playerName } = data;
-    const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName);
+  handleJoinQuiz(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
+    const { quizCode, playerName, avatar } = data;
+    const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName,this.quizzes);
     if (result) {
       client.join(quizCode);
-      this.server.to(quizCode).emit('playerJoined', { id: client.id, playerName });
+      this.server.to(quizCode).emit('playerJoined', { id: client.id, playerName, avatar });
     } else {
       client.emit('errorMsg', 'Failed to join quiz.');
     }
-}}
+  }
+}
