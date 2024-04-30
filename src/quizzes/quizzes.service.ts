@@ -12,4 +12,5 @@ export class QuizzesService extends CrudService<Quiz>{
   ) {
       super(quizRepository);
   }
+
 }

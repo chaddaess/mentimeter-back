@@ -13,7 +13,7 @@ export class CreateUserDto {
     message:"$property is compulsory"
   })
   @MinLength(6, {
-      message: "$property minimum length required ($constraint1) !"
+      message: "the length of your  $property  is inferior to the minimum length required ($constraint1)"
     }
   )
   password?:string;

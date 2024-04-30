@@ -29,6 +29,11 @@ export class Quiz {
   @OneToMany(
     ()=>Question,
     (question:Question)=>question.quiz,
+    { eager: true }
   )
   questions:Question[]
+
+  getId() {
+    return this.id;
+  }
 }

@@ -6,6 +6,7 @@ import { Quiz } from "./entities/quiz.entity";
 import { Question } from "../questions/entities/question.entity";
 import { User } from "../users/entities/user.entity";
 
+
 @Module({
   controllers: [QuizzesController],
   providers: [QuizzesService],
