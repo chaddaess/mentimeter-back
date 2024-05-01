@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Inject } 
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
+import { Quiz } from "./entities/quiz.entity";
 
 
 @Controller('quizzes')
@@ -21,6 +22,11 @@ export class QuizzesController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.quizzesService.findOne(id);
+  }
+
+  @Get('/user/:id')
+  async findByUserId(@Param('id') id: string): Promise<Quiz[]> {
+    return this.quizzesService.findQuizByUserId(id);
   }
 
   @Patch(':id')

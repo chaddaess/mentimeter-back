@@ -13,4 +13,12 @@ export class QuizzesService extends CrudService<Quiz>{
       super(quizRepository);
   }
 
+  async findQuizByUserId(userId: string): Promise<Quiz[]> {
+    const qb=this.quizRepository.createQueryBuilder("quiz");
+    qb.select("quiz")
+        .innerJoin("quiz.user","user")
+        .where('user.id = :userId', { userId });
+    console.log(qb.getSql());
+    return await qb.getRawMany();
+  }
 }
