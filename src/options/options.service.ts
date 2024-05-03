@@ -12,4 +12,10 @@ export class OptionsService extends CrudService<Option> {
   ) {
     super(optionRepository);
   }
+
+  add(options:Option[]) {
+    for(const option of options){
+      this.optionRepository.create(option);
+    }
+  }
 }

@@ -14,6 +14,6 @@ export class CreateQuizDto {
     questions:Question[]
     @IsEnum(Topics)
     @IsNotEmpty()
-    topic: Topic
+    topic?: Topic
 
 }
