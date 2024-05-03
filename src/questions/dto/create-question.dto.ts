@@ -25,6 +25,6 @@ export class CreateQuestionDto {
 })
 @IsString()
 @IsNotEmpty()
-correctAnswer: string
+correctAnswer: Option;
 
 }
