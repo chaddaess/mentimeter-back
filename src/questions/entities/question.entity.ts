@@ -30,6 +30,7 @@ export class Question {
   correctAnswer: string
   @IsEnum(Topics)
   @IsNotEmpty()
+  @Column()
   topics: Topic[];
 
 }

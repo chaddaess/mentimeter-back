@@ -33,6 +33,7 @@ export class Quiz {
   )
   questions:Question[]
 
+  @Column()
   topic : Topic;
 
   getId() {
