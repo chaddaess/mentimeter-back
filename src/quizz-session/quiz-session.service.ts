@@ -14,6 +14,7 @@ export class QuizSessionService {
     console.log("please please please");
     const quizCode = uuidv4();
     const {quiz,owner}=quizDto;
+    console.log(quiz);
     const quizSession : QuizSession ={quiz :quiz , quizCode:quizCode,owner:owner ,hasStarted :false,players:[]}
     this.quizzes.set(quizCode,quizSession);
     quizzes.set(quizCode,quizSession);

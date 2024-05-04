@@ -15,8 +15,8 @@ export class QuizSessionGateway {
 
   @SubscribeMessage('createQuizSession')
   handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket): any{
-    console.log("hellooooooooooo");
     const session = this.quizSessionService.createQuiz(createQuizSessionDto,this.quizzes);
+    client.emit("QuizCreationSuccess",`Quiz ${session} created successfully`)
     return session;
   }
 
@@ -29,6 +29,7 @@ export class QuizSessionGateway {
     sessions.forEach(function (value, key) {
       jsonResult[key] = value;
     });
+    console.log(jsonResult);
     return  jsonResult;
   }
 
@@ -48,7 +49,7 @@ export class QuizSessionGateway {
   handleJoinQuiz(@MessageBody() data: JoinQuizDto, @ConnectedSocket() client: Socket): boolean {
     const { quizCode, playerName, avatar } = data;
     const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName,this.quizzes);
-    if (!result) {
+    if (result) {
       client.join(quizCode)
       this.server.to(quizCode).emit('playerJoined', { id: client.id, playerName, avatar });
     } else {
