@@ -1,7 +1,9 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import{IoAdapter} from "@nestjs/platform-socket.io"
+import { Server,Socket} from 'socket.io';
 import { QuizSessionService } from './quiz-session.service';
 import {QuizSession} from "./entities/quiz-session.entity";
+import { JoinQuizDto } from "./dto/join-quiz-dto";
 
 @WebSocketGateway(3001)
 export class QuizSessionGateway {
@@ -12,9 +14,9 @@ export class QuizSessionGateway {
   server: Server;
 
   @SubscribeMessage('createQuizSession')
-  handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket,): any{
+  handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket): any{
     console.log("hellooooooooooo");
-    const session = this.quizSessionService.createQuiz(createQuizSessionDto);
+    const session = this.quizSessionService.createQuiz(createQuizSessionDto,this.quizzes);
     return session;
   }
 
@@ -43,14 +45,18 @@ export class QuizSessionGateway {
   }
 
   @SubscribeMessage('joinQuiz')
-  handleJoinQuiz(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
+  handleJoinQuiz(@MessageBody() data: JoinQuizDto, @ConnectedSocket() client: Socket): boolean {
     const { quizCode, playerName, avatar } = data;
     const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName,this.quizzes);
-    if (result) {
-      client.join(quizCode);
+    if (!result) {
+      client.join(quizCode)
       this.server.to(quizCode).emit('playerJoined', { id: client.id, playerName, avatar });
     } else {
       client.emit('errorMsg', 'Failed to join quiz.');
     }
+    return (result)
   }
+
+
+
 }

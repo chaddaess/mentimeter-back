@@ -10,12 +10,13 @@ import {MessageBody} from "@nestjs/websockets";
 @Injectable()
 export class QuizSessionService {
   quizzes : Map<any,any> =new Map();
-  createQuiz(quizDto: CreateQuizSessionDto): string {
+  createQuiz(quizDto: CreateQuizSessionDto,quizzes:Map<any,any>): string {
     console.log("please please please");
     const quizCode = uuidv4();
     const {quiz,owner}=quizDto;
     const quizSession : QuizSession ={quiz :quiz , quizCode:quizCode,owner:owner ,hasStarted :false,players:[]}
     this.quizzes.set(quizCode,quizSession);
+    quizzes.set(quizCode,quizSession);
     return quizCode;
   }
 
