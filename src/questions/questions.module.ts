@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Question } from "./entities/question.entity";
 import { Quiz } from "../quizzes/entities/quiz.entity";
 import { Option } from "../options/entities/option.entity";
+import {OptionsService} from "../options/options.service";
 
 @Module({
   controllers: [QuestionsController],

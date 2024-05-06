@@ -10,7 +10,7 @@ export class QuizzesController {
 
   @Post()
   create(@Body() createQuizDto: CreateQuizDto) {
-    return this.quizzesService.create(createQuizDto);
+    return this.quizzesService.saveQuiz(createQuizDto);
   }
 
   @Get()
