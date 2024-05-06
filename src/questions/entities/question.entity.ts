@@ -31,6 +31,6 @@ export class Question {
   @IsEnum(Topics)
   @IsNotEmpty()
   @Column()
-  topics: Topic[];
+  topics: Topic;
 
 }

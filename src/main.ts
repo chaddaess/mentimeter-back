@@ -27,8 +27,6 @@ async function bootstrap() {
   });
   SwaggerModule.setup('document', app, document);
   app.useGlobalPipes(new ValidationPipe())
-  app.useWebSocketAdapter(new WsAdapter(app));
-
   await app.listen(3000);
 }
 bootstrap();

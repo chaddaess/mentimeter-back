@@ -13,7 +13,6 @@ export class QuizSessionGateway {
 
   @SubscribeMessage('createQuizSession')
   handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket,): any{
-    console.log("hellooooooooooo");
     const session = this.quizSessionService.createQuiz(createQuizSessionDto);
     return client.emit('createQuizSession',session);
   }
@@ -22,11 +21,11 @@ export class QuizSessionGateway {
   handleFindAllQuizSession(@ConnectedSocket() client: Socket): any {
     console.log("le ileha ella lah")
     const sessions = this.quizSessionService.findAll();
-    console.log(sessions);
     const jsonResult = {};
     sessions.forEach(function (value, key) {
       jsonResult[key] = value;
     });
+    console.log(jsonResult)
     return  client.emit('findAllQuizSession',jsonResult);
   }
 

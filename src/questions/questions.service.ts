@@ -8,16 +8,14 @@ import {OptionsService} from "../options/options.service";
 @Injectable()
 export class QuestionsService extends CrudService<Question>{
   constructor(
-    @InjectRepository(Question)
-    private questionRepository: Repository<Question>,
-    private optionsService : OptionsService
+      @InjectRepository(Question)
+      private questionRepository: Repository<Question>,
   ) {
     super(questionRepository);
   }
-  public add(questions : Question[]){
-    for(const question of questions){
+
+  /*async addQuestionWithOptions(question: Question): Promise<void> {
       this.questionRepository.create(question);
-      this.optionsService.add(question?.options);
-    }
+  }*/
   }
-}
+
