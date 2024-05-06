@@ -15,7 +15,7 @@ export class QuizSessionGateway {
   handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket,): any{
     console.log("hellooooooooooo");
     const session = this.quizSessionService.createQuiz(createQuizSessionDto);
-    return session;
+    return client.emit('createQuizSession',session);
   }
 
   @SubscribeMessage('findAllQuizSession')
@@ -27,7 +27,7 @@ export class QuizSessionGateway {
     sessions.forEach(function (value, key) {
       jsonResult[key] = value;
     });
-    return  jsonResult;
+    return  client.emit('findAllQuizSession',jsonResult);
   }
 
   @SubscribeMessage('findOneQuizSession')
