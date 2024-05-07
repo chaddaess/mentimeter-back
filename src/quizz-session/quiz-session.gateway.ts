@@ -5,7 +5,7 @@ import { QuizSessionService } from './quiz-session.service';
 import {QuizSession} from "./entities/quiz-session.entity";
 import { JoinQuizDto } from "./dto/join-quiz-dto";
 
-@WebSocketGateway(3001)
+@WebSocketGateway(3001,{ cors: true})
 export class QuizSessionGateway {
   private quizzes =new Map();
   constructor(private readonly quizSessionService: QuizSessionService) {}
