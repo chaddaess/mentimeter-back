@@ -2,11 +2,13 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSo
 import { Server, Socket } from 'socket.io';
 import { QuizSessionService } from './quiz-session.service';
 import {QuizSession} from "./entities/quiz-session.entity";
+import {QuestionsService} from "../questions/questions.service";
 
 @WebSocketGateway(3001)
 export class QuizSessionGateway {
   private quizzes =new Map();
-  constructor(private readonly quizSessionService: QuizSessionService) {}
+  constructor(private readonly quizSessionService: QuizSessionService,
+              private readonly questionService : QuestionsService) {}
 
   @WebSocketServer()
   server: Server;
@@ -50,6 +52,18 @@ export class QuizSessionGateway {
       this.server.to(quizCode).emit('playerJoined', { id: client.id, playerName, avatar });
     } else {
       client.emit('errorMsg', 'Failed to join quiz.');
+    }
+  }
+  @SubscribeMessage('getQuestion')
+  startQuizSession(@MessageBody() data: any ,@ConnectedSocket() client: Socket): void {
+    const {quizCode , questionNumber}=data;
+    const quiz=this.quizzes[quizCode];
+    const questions=quiz.questions;
+    if(questionNumber > questions.length || questionNumber<=0 ){
+      client.emit('getQuestion','invalid request , check question number');
+    }
+    else {
+      this.server.to(quizCode).emit(questions[questionNumber]);
     }
   }
 }
