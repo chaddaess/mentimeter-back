@@ -3,6 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { QuizSessionService } from './quiz-session.service';
 import {QuizSession} from "./entities/quiz-session.entity";
 import {QuestionsService} from "../questions/questions.service";
+import {players} from "./entities/players.entity";
 
 @WebSocketGateway(3001)
 export class QuizSessionGateway {
@@ -64,6 +65,23 @@ export class QuizSessionGateway {
     }
     else {
       this.server.to(quizCode).emit(questions[questionNumber]);
+    }
+  }
+
+  @SubscribeMessage('getAnswer')
+  getAnswer(@MessageBody() data: any ,@ConnectedSocket() client: Socket): void {
+    const {quizCode , answer , questionNumber,playerPseudo}=data;
+    const quiz=this.quizzes[quizCode];
+    const questions=quiz.questions;
+    if(questionNumber > questions.length || questionNumber<=0 ){
+      client.emit('getQuestion','invalid request , check question number');
+    }
+    else {
+      const question = questions[questionNumber];
+      const player = quiz.players.find(player  => {
+        return player.pseudo=== playerPseudo
+      });
+      player.score = answer.validity ? player.score+1 : player.score;
     }
   }
 }
