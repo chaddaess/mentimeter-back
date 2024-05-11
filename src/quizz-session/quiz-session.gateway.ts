@@ -5,6 +5,10 @@ import {QuizSession} from "./entities/quiz-session.entity";
 import {QuestionsService} from "../questions/questions.service";
 import {players} from "./entities/players.entity";
 
+function endQuiz() {
+
+}
+
 @WebSocketGateway(3001)
 export class QuizSessionGateway {
   private quizzes =new Map();
@@ -46,6 +50,7 @@ export class QuizSessionGateway {
 
   @SubscribeMessage('joinQuiz')
   handleJoinQuiz(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
+    // we should save the quiz code in the front
     const { quizCode, playerName, avatar } = data;
     const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName,this.quizzes);
     if (result) {
@@ -56,21 +61,18 @@ export class QuizSessionGateway {
     }
   }
   @SubscribeMessage('getQuestion')
-  startQuizSession(@MessageBody() data: any ,@ConnectedSocket() client: Socket): void {
+  sendQuestion(@MessageBody() data: any ): void {
     const {quizCode , questionNumber}=data;
     const quiz=this.quizzes[quizCode];
     const questions=quiz.questions;
-    if(questionNumber > questions.length || questionNumber<=0 ){
-      client.emit('getQuestion','invalid request , check question number');
-    }
-    else {
+    if(questionNumber < questions.length && questionNumber>=0 ){
       this.server.to(quizCode).emit(questions[questionNumber]);
     }
   }
 
   @SubscribeMessage('getAnswer')
   getAnswer(@MessageBody() data: any ,@ConnectedSocket() client: Socket): void {
-    const {quizCode , answer , questionNumber,playerPseudo}=data;
+    let {quizCode , answer , questionNumber,playerPseudo}=data;
     const quiz=this.quizzes[quizCode];
     const questions=quiz.questions;
     if(questionNumber > questions.length || questionNumber<=0 ){
@@ -81,7 +83,15 @@ export class QuizSessionGateway {
       const player = quiz.players.find(player  => {
         return player.pseudo=== playerPseudo
       });
-      player.score = answer.validity ? player.score+1 : player.score;
+      player.score += answer.validity ? 1 : 0;
+      if(questionNumber+1 > questions.length ){
+        endQuiz();
+      }
+      else{
+        const nextQuestionNumber=questionNumber+1;
+        const nextQuestionData = {quizCode , nextQuestionNumber};
+        this.sendQuestion(nextQuestionData);
+      }
     }
   }
 }
