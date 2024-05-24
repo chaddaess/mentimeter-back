@@ -12,7 +12,7 @@ export class AuthenticationController {
   @ApiTags('authentication')
   @ApiOperation({ summary: 'Creating an account' })
   @Post('/register')
-  public  register(@Body() createUser:CreateUserDto):Promise<User>{
+  public  register(@Body() createUser:CreateUserDto):Promise<{}>{
      return  this.authenticationService.register(createUser)
   }
 
