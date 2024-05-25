@@ -39,6 +39,7 @@ export class AuthenticationService {
       i++;
     }
     return{
+      "email":email,
       "username":username,
     }
   }
@@ -68,6 +69,7 @@ export class AuthenticationService {
     return{
       "access-token":jwt,
       "username":username,
+      "email":email,
     }
   }
 
