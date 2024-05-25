@@ -22,37 +22,35 @@ export class QuizSessionService {
     return quizCode;
   }
 
-  joinQuiz(quizCode: string, playerId: string, playerName: string,quizzes: Map<string, QuizSession>): boolean {
-    const quiz = quizzes.get(quizCode);
-    if (quiz && !quiz.hasStarted) {
-      quiz.players.push({ pseudo:playerName, avatar : "",answers:[],score: 0 });
-      return true;
+    joinQuiz(quizCode: string, playerId: string, playerName: string, quizzes: Map<string, QuizSession>): boolean {
+        const quiz = quizzes.get(quizCode);
+        if (quiz && !quiz.hasStarted) {
+            quiz.players.push({pseudo: playerName, avatar: "", answers: [], score: 0});
+            return true;
+        }
+        return false;
     }
-    return false;
-  }
 
-  startQuiz(quizCode: string,quizzes: Map<string, QuizSession>): any[] {
-    const quizSession:QuizSession = quizzes.get(quizCode);
-    const quiz=quizSession.quiz;
-    if (quiz) {
-      quizSession.hasStarted = true;
-      return quiz.questions; // Send the questions to all players
+    startQuiz(quizCode: string, quizzes: Map<string, QuizSession>): any[] {
+        const quizSession: QuizSession = quizzes.get(quizCode);
+        const quiz = quizSession.quiz;
+        if (quiz) {
+            quizSession.hasStarted = true;
+            return quiz.questions; // Send the questions to all players
+        }
+        return [];
     }
-    return [];
-  }
 
-  findAll():Map<string,QuizSession>{
-    return this.quizzes;
-  }
-  findOne(@MessageBody() code: string,quizzes: Map<string, QuizSession>) : QuizSession{
-    if(!quizzes[code])
-      return
-    return
-  }
+    findAll(): Map<string, QuizSession> {
+        return this.quizzes;
+    }
 
-  remove(code: string,quizzes: Map<string, QuizSession>) {
-    quizzes.delete(code);
-  }
+    findOne(@MessageBody() code: string, quizzes: Map<string, QuizSession>): QuizSession {
+        if (!quizzes[code]) return
+        return
+    }
 
-
+    remove(code: string, quizzes: Map<string, QuizSession>) {
+        quizzes.delete(code);
+    }
 }
