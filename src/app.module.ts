@@ -17,6 +17,8 @@ import { CommonModule } from './common/common.module';
 import { UserAnswerModule } from './user-answer/user-answer.module';
 import {UserAnswer} from "./user-answer/entities/user-answer.entity";
 import { QuizSessionModule } from './quizz-session/quiz-session.module';
+import {QuestionsService} from "./questions/questions.service";
+import {OptionsService} from "./options/options.service";
 
 
 dotenv.config();
@@ -42,6 +44,8 @@ dotenv.config();
     CommonModule,
     UserAnswerModule,
     QuizSessionModule,
+      OptionsModule,
+      QuestionsModule
   ],
   controllers: [AppController],
   providers: [AppService],

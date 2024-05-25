@@ -10,7 +10,10 @@ dotenv.config();
 dotenv.config()
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:5173', // Allow requests from this origin
+    credentials: true, // Enable credentials (e.g., cookies)
+  });
   const config = new DocumentBuilder()
     .setTitle('Mentimeter API')
     .setDescription('This API provides all the functionalities of the quiz app ')
@@ -22,7 +25,6 @@ async function bootstrap() {
   });
   SwaggerModule.setup('document', app, document);
   app.useGlobalPipes(new ValidationPipe())
-
   await app.listen(3000);
 }
 bootstrap();

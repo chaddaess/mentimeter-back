@@ -1,6 +1,7 @@
 import { Column, DeleteDateColumn, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { Question } from "../../questions/entities/question.entity";
+import {Topic} from "../topics.enum";
 
 @Entity()
 export class Quiz {
@@ -31,6 +32,9 @@ export class Quiz {
     (question:Question)=>question.quiz,
   )
   questions:Question[]
+
+  @Column()
+  topic : Topic;
 
   getId() {
     return this.id;

@@ -13,6 +13,7 @@ export class QuizSessionService {
   createQuiz(quizDto: CreateQuizSessionDto,quizzes:Map<any,any>): string {
     console.log("please please please");
     const quizCode = uuidv4();
+    console.log(quizCode)
     const {quiz,owner}=quizDto;
     console.log(quiz);
     const quizSession : QuizSession ={quiz :quiz , quizCode:quizCode,owner:owner ,hasStarted :false,players:[]}
