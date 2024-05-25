@@ -3,7 +3,6 @@ import { Server, Socket } from 'socket.io';
 import { QuizSessionService } from './quiz-session.service';
 import {QuizSession} from "./entities/quiz-session.entity";
 import {QuestionsService} from "../questions/questions.service";
-import {players} from "./entities/players.entity";
 
 function endQuiz() {
 
@@ -77,7 +76,6 @@ export class QuizSessionGateway {
       // Handle error
       return;
     }
-
     this.server.to(quizCode).emit('question', question);
   }
 
