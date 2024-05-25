@@ -4,6 +4,6 @@ import { QuizSessionGateway } from './quiz-session.gateway';
 import {QuestionsService} from "../questions/questions.service";
 
 @Module({
-  providers: [QuizSessionGateway, QuizSessionService,QuestionsService],
+  providers: [QuizSessionGateway,QuizSessionService],
 })
 export class QuizSessionModule {}

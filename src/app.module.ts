@@ -39,7 +39,7 @@ dotenv.config();
         synchronize:true,
       }
     ),
-    AuthenticationModule,
+      AuthenticationModule,
     CommonModule,
     UserAnswerModule,
     QuizSessionModule,
