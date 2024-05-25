@@ -7,7 +7,7 @@ import {QuestionsService} from "../questions/questions.service";
 import {players} from "./entities/players.entity";
 
 function endQuiz() {
-
+  console.log("quiz ended !!");
 }
 
 @WebSocketGateway(3001,{ cors: true})
@@ -98,6 +98,7 @@ export class QuizSessionGateway {
       });
       player.score += answer.validity ? 1 : 0;
       if(questionNumber+1 > questions.length ){
+        this.server.to(quizCode).emit('endQuiz');
         endQuiz();
       }
       else{
