@@ -37,7 +37,6 @@ export class UsersService {
       where: { email:email },
       relations: ['quizzes'],
     });
-    console.log(user);
     return user;
   }
 }
