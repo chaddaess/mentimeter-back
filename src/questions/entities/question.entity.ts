@@ -14,23 +14,25 @@ export class Question {
 
   @DeleteDateColumn()
   deletedAt: Date;
-  
+
   @ManyToOne(
     ()=>Quiz,
     (quiz:Quiz)=>quiz.questions
   )
   quiz:Quiz;
+
   @OneToMany(
     ()=>Option,
-    (option:Option)=>option.question
+    (option:Option)=>option.question,
+      { cascade: true, eager: true }
   )
   options:Option[];
 
   @Column({ nullable: false })
-  correctAnswer: string
+  correctAnswer: string;
+
   @IsEnum(Topics)
   @IsNotEmpty()
   @Column()
   topics: Topic;
-
 }
