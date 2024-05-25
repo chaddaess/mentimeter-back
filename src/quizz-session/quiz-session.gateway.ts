@@ -67,12 +67,12 @@ export class QuizSessionGateway {
     const { quizCode, questionNumber } = data;
     const quiz = this.quizSessionService.quizzes.get(quizCode);
     console.log(data)
-    console.log("hello",quizCode,quiz)
+    console.log("hello",quizCode,quiz,quiz.quiz.questions,questionNumber)
     if (!quiz) {
       return;
     }
 
-    const question = quiz.questions[questionNumber];
+    const question = quiz.quiz.questions[questionNumber];
     if (!question) {
       // Handle error
       return;
@@ -99,8 +99,8 @@ export class QuizSessionGateway {
         return player.pseudo=== playerPseudo
       });
       const questionStartTime = Date.now();
-      const score = answer.validity ? Math.max(0, 20 - ((Date.now() - questionStartTime) / 1000)) * 10 : 0;
-      player.score+= score;
+        const score = answer.validity ? Math.max(0, 20 - ((Date.now() - questionStartTime) / 1000)) * 10 : 0;
+        player.score+= score;
       if(questionNumber+1 > questions.length ){
         endQuiz();
       }
