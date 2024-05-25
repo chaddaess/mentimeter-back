@@ -12,8 +12,7 @@ function endQuiz() {
 @WebSocketGateway(3001)
 export class QuizSessionGateway {
   private quizzes =new Map();
-  constructor(private readonly quizSessionService: QuizSessionService,
-              private readonly questionService : QuestionsService) {}
+  constructor(private readonly quizSessionService: QuizSessionService) {}
 
   @WebSocketServer()
   server: Server;
@@ -61,13 +60,24 @@ export class QuizSessionGateway {
     }
   }
   @SubscribeMessage('getQuestion')
-  sendQuestion(@MessageBody() data: any ): void {
-    const {quizCode , questionNumber}=data;
-    const quiz=this.quizzes[quizCode];
-    const questions=quiz.questions;
-    if(questionNumber < questions.length && questionNumber>=0 ){
-      this.server.to(quizCode).emit(questions[questionNumber]);
+  private sendQuestion(data: any): void {
+    const { quizCode, questionNumber } = data;
+    const quiz = this.quizzes.get(quizCode);
+    if (!quiz) {
+      return;
     }
+
+    const question = quiz.questions[questionNumber];
+    if (!question) {
+      // Handle error
+      return;
+    }
+
+    this.server.to(quizCode).emit('question', question);
+  }
+
+  private endQuiz(): void {
+    // Implement quiz ending logic
   }
 
   @SubscribeMessage('getAnswer')
