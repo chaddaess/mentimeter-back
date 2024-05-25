@@ -51,18 +51,23 @@ export class QuizSessionGateway {
   handleJoinQuiz(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
     // we should save the quiz code in the front
     const { quizCode, playerName, avatar } = data;
+    console.log(data)
+    console.log(quizCode,playerName);
     const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName,this.quizzes);
     if (result) {
       client.join(quizCode);
+      console.log("player joined",quizCode)
       this.server.to(quizCode).emit('playerJoined', { id: client.id, playerName, avatar });
     } else {
       client.emit('errorMsg', 'Failed to join quiz.');
     }
   }
   @SubscribeMessage('getQuestion')
-  private sendQuestion(data: any): void {
+  private sendQuestion(@MessageBody() data: any): void {
     const { quizCode, questionNumber } = data;
-    const quiz = this.quizzes.get(quizCode);
+    const quiz = this.quizSessionService.quizzes.get(quizCode);
+    console.log(data)
+    console.log("hello",quizCode,quiz)
     if (!quiz) {
       return;
     }
@@ -94,7 +99,8 @@ export class QuizSessionGateway {
         return player.pseudo=== playerPseudo
       });
       const questionStartTime = Date.now();
-      player.score += answer.validity ? Math.max(0, 20 - ((Date.now() - questionStartTime) / 1000)) * 10 : 0;
+      const score = answer.validity ? Math.max(0, 20 - ((Date.now() - questionStartTime) / 1000)) * 10 : 0;
+      player.score+= score;
       if(questionNumber+1 > questions.length ){
         endQuiz();
       }
@@ -103,8 +109,10 @@ export class QuizSessionGateway {
           const nextQuestionNumber = questionNumber + 1;
           const nextQuestionData = { quizCode, nextQuestionNumber };
           this.sendQuestion(nextQuestionData);
-        }, 20000);
+        }, 2000);
       }
     }
   }
+
+
 }

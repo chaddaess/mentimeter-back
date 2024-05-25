@@ -11,19 +11,25 @@ import {MessageBody} from "@nestjs/websockets";
 export class QuizSessionService {
   quizzes : Map<any,any> =new Map();
   createQuiz(quizDto: CreateQuizSessionDto): string {
+    console.log(quizDto)
     console.log("please please please");
     const quizCode = uuidv4();
     console.log(quizCode)
     const {quiz,owner}=quizDto;
     const quizSession : QuizSession ={quiz :quiz , quizCode:quizCode,owner:owner ,hasStarted :false,players:[]}
     this.quizzes.set(quizCode,quizSession);
+
     return quizCode;
   }
 
   joinQuiz(quizCode: string, playerId: string, playerName: string,quizzes: Map<string, QuizSession>): boolean {
-    const quiz = quizzes.get(quizCode);
-    if (quiz && !quiz.hasStarted) {
+    const quiz = this.quizzes.get(quizCode);
+    console.log(quizCode);
+    console.log(quiz)
+    console.log(this.quizzes)
+    if (quiz) {
       quiz.players.push({ pseudo:playerName, avatar : "",answers:[],score: 0 });
+      console.log("hello")
       return true;
     }
     return false;
