@@ -83,14 +83,17 @@ export class QuizSessionGateway {
       const player = quiz.players.find(player  => {
         return player.pseudo=== playerPseudo
       });
-      player.score += answer.validity ? 1 : 0;
+      const questionStartTime = Date.now();
+      player.score += answer.validity ? Math.max(0, 20 - ((Date.now() - questionStartTime) / 1000)) * 10 : 0;
       if(questionNumber+1 > questions.length ){
         endQuiz();
       }
       else{
-        const nextQuestionNumber=questionNumber+1;
-        const nextQuestionData = {quizCode , nextQuestionNumber};
-        this.sendQuestion(nextQuestionData);
+        setTimeout(() => {
+          const nextQuestionNumber = questionNumber + 1;
+          const nextQuestionData = { quizCode, nextQuestionNumber };
+          this.sendQuestion(nextQuestionData);
+        }, 20000);
       }
     }
   }
