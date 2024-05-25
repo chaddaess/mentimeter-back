@@ -17,7 +17,7 @@ export class AuthenticationService {
     private jwtService:JwtService,
   ) {}
 
-  public async register(createUserDto: CreateUserDto): Promise<User> {
+  public async register(createUserDto: CreateUserDto):Promise<{}> {
 
     let email: string = createUserDto.email;
     let password: string = createUserDto.password;
@@ -31,7 +31,16 @@ export class AuthenticationService {
       email:email,
       password:hashedPassword,
     }
-    return await this.userRepository.save(user)
+    await this.userRepository.save(user)
+    let i:number=0
+    let username:string=""
+    while( i < user.email.length && isAlphanumeric(user.email[i])) {
+      username+=user.email[i];
+      i++;
+    }
+    return{
+      "username":username,
+    }
   }
 
   public async login(createUser:CreateUserDto):Promise<{}>{
