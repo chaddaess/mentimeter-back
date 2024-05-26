@@ -27,7 +27,7 @@ export class AuthenticationService {
     }
     const salt: string = await bcrypt.genSalt();
     const hashedPassword: string = await bcrypt.hash(password, salt);
-    let user:User={
+    let user:Partial<User> = {
       email:email,
       password:hashedPassword,
     }

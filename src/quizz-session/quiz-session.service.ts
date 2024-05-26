@@ -20,8 +20,11 @@ export class QuizSessionService {
     }
     async createQuiz(quizId: string, ownerId: string, ownerSocketId: string): Promise<string> {
         const quizCode = uuidv4();
-        const quiz = await this.quizRepository.findOne({where: {id: quizId}});
-        const owner = await this.userRepository.findOne({where: {id: ownerId}});
+        const quiz = await this.quizRepository.createQueryBuilder('quiz')
+            .leftJoinAndSelect('quiz.questions', 'question')
+            .leftJoinAndSelect('question.options', 'option')
+            .getOne()
+        const owner = await this.userRepository.findOne({where: {email: ownerId}});
         const quizSession: QuizSession = {
             quiz: quiz,
             quizCode: quizCode,

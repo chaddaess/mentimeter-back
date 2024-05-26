@@ -5,16 +5,23 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import {CrudService} from "../common/service/crud.service";
-import {Question} from "../questions/entities/question.entity";
+import {Quiz} from "../quizzes/entities/quiz.entity";
 
 @Injectable()
-export class UsersService extends CrudService<User> {
-
+export class UsersService extends CrudService<User>{
   constructor(
     @InjectRepository(User)
-      private userRepository : Repository<User>
+    private userRepository : Repository<User>
   )
   {
-    super(userRepository);
+    super(userRepository)
+  }
+
+  getUserWithQuizzes(email:string){
+    let user=this.userRepository.findOne({
+      where: { email:email },
+      relations: ['quizzes'],
+    });
+    return user;
   }
 }
