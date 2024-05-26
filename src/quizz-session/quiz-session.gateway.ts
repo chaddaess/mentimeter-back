@@ -78,6 +78,7 @@ export class QuizSessionGateway {
          client.emit("sessionDetail", session);
      }
  */
+
   @SubscribeMessage("getAnswer")
   getAnswer(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
     let { quizCode, answer, questionNumber, playerPseudo } = data;

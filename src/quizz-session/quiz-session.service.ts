@@ -19,18 +19,18 @@ export class QuizSessionService {
         return quizCode;
     }
 
-  joinQuiz(quizCode: string, playerId: string, playerName: string): boolean {
-    const quiz = this.quizzes.get(quizCode);
-    console.log(quizCode);
-    console.log(quiz)
-    console.log(this.quizzes)
-    if (quiz) {
-      quiz.players.push({ pseudo:playerName, avatar : "",answers:[],score: 0 });
-      console.log("hello")
-      return true;
+    joinQuiz(quizCode: string, playerId: string, playerName: string): boolean {
+        const quiz = this.quizzes.get(quizCode);
+        console.log(quizCode);
+        console.log(quiz)
+        console.log(this.quizzes)
+        if (quiz) {
+            quiz.players.push({pseudo: playerName, avatar: "", answers: [], score: 0});
+            console.log("hello")
+            return true;
+        }
+        return false;
     }
-    return false;
-  }
 
     startQuiz(quizCode: string): any[] {
         const quizSession: QuizSession = this.quizzes.get(quizCode);
@@ -42,17 +42,13 @@ export class QuizSessionService {
         throw new NotFoundException(`Quiz session with code ${quizCode} not found`);
     }
 
-
-
-
-
     processLeaderboard(quizCode: string) {
         const quizSession = this.quizzes.get(quizCode);
         if (quizSession) {
             const leaderboard = quizSession.players
                 .sort((a, b) => b.score - a.score)
                 .map((player, index) => ({
-                    rank: index + 1, pseudo: player.pseudo, score: player.score,
+                    rank: index + 1, name: player.pseudo, score: player.score, avatar: player.avatar
                 }));
             return leaderboard;
         }
