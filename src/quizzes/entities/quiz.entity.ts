@@ -19,7 +19,7 @@ export class Quiz {
 
   @DeleteDateColumn()
   deletedAt: Date;
-  
+
   @ManyToOne(
     ()=>User,
     (user:User)=>user.quizzes,
@@ -30,6 +30,7 @@ export class Quiz {
   @OneToMany(
     ()=>Question,
     (question:Question)=>question.quiz,
+      {eager: true}
   )
   questions:Question[]
 

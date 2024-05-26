@@ -48,6 +48,7 @@ export class QuizSessionGateway {
     }
 
     const questions = quiz.quiz.questions;
+    console.log(quiz.quiz)
     const question = questions[questionNumber];
     if (!question) {
       this.server.to(quizCode).emit("error", `an error occurred while retrieving question ${questionNumber}`);
@@ -73,7 +74,6 @@ export class QuizSessionGateway {
       }, 10000);
     }
   }
-
 
     sendLeaderboard(quizCode: string, leaderboard: any) {
         this.server.to(quizCode).emit("leaderboard", leaderboard);
