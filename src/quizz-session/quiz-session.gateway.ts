@@ -10,33 +10,29 @@ export class QuizSessionGateway {
   constructor(private readonly quizSessionService: QuizSessionService) {
   }
 
-  @SubscribeMessage("findAllQuizSession")
-  handleFindAllQuizSession(@ConnectedSocket() client: Socket): any {
-    console.log("le ileha ella lah");
-    const sessions = this.quizSessionService.findAll();
-    const jsonResult = {};
-    sessions.forEach(function(value, key) {
-      jsonResult[key] = value;
-    });
-    console.log(jsonResult);
-    return client.emit("findAllQuizSession", jsonResult);
-  }
-
-  @SubscribeMessage("joinQuiz")
-  handleJoinQuiz(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
-    // we should save the quiz code in the front
-    const { quizCode, playerName, avatar } = data;
-    console.log(data);
-    console.log(quizCode, playerName);
-    const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName);
-    if (result) {
-      client.join(quizCode);
-      console.log("player joined", quizCode);
-      this.server.to(quizCode).emit("playerJoined", { id: client.id, playerName, avatar });
-    } else {
-      client.emit("errorMsg", "Failed to join quiz.");
+    @SubscribeMessage('findAllQuizSession') handleFindAllQuizSession(@ConnectedSocket() client: Socket): any {
+        const sessions = this.quizSessionService.findAll();
+        const jsonResult = {};
+        sessions.forEach((value, key) => {
+            jsonResult[key] = value;
+        });
+        console.log(jsonResult)
+        return client.emit('findAllQuizSession', jsonResult);
     }
-  }
+
+    @SubscribeMessage('joinQuiz') handleJoinQuiz(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
+        // we should save the quiz code in the front
+        const {quizCode, playerName, avatar} = data;
+        const result = this.quizSessionService.joinQuiz(quizCode, client.id, playerName, avatar);
+
+        if (result) {
+            client.join(quizCode);
+            console.log("player joined", quizCode)
+            this.server.to(quizCode).emit('playerJoined', {id: client.id, playerName, avatar});
+        } else {
+            client.emit('errorMsg', 'Failed to join quiz.');
+        }
+    }
 
   @SubscribeMessage("sendQuestion")
   sendQuestion(@MessageBody() data: any): void {

@@ -19,14 +19,10 @@ export class QuizSessionService {
         return quizCode;
     }
 
-    joinQuiz(quizCode: string, playerId: string, playerName: string): boolean {
+    joinQuiz(quizCode: string, playerId: string, playerName: string, avatar: string): boolean {
         const quiz = this.quizzes.get(quizCode);
-        console.log(quizCode);
-        console.log(quiz)
-        console.log(this.quizzes)
         if (quiz) {
-            quiz.players.push({pseudo: playerName, avatar: "", answers: [], score: 0});
-            console.log("hello")
+            quiz.players.push({pseudo: playerName, avatar: avatar, answers: [], score: 0});
             return true;
         }
         return false;
