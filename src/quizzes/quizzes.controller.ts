@@ -9,8 +9,9 @@ export class QuizzesController {
   constructor(@Inject(QuizzesService) private quizzesService: QuizzesService) {}
 
   @Post()
-  create(@Body() createQuizDto: CreateQuizDto) {
-    return this.quizzesService.saveQuiz(createQuizDto);
+  create(@Body() createQuizDto) {
+    console.log(createQuizDto.userEmail);
+    return this.quizzesService.saveQuiz(createQuizDto, createQuizDto.userEmail);
   }
 
   @Get()
