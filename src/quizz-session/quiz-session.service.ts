@@ -8,18 +8,18 @@ export class QuizSessionService {
 
     quizzes: Map<string, QuizSession> = new Map();
 
-    createQuiz(quizDto: CreateQuizSessionDto, quizzes: Map<any, any>): string {
+    createQuiz(quizDto: CreateQuizSessionDto): string {
         const quizCode = uuidv4();
         console.log(quizCode)
         const {quiz, owner} = quizDto;
         console.log(quiz);
         const quizSession: QuizSession = {quiz: quiz, quizCode: quizCode, owner: owner, hasStarted: false, players: []}
         this.quizzes.set(quizCode, quizSession);
-        quizzes.set(quizCode, quizSession);
+        this.quizzes.set(quizCode, quizSession);
         return quizCode;
     }
 
-  joinQuiz(quizCode: string, playerId: string, playerName: string,quizzes: Map<string, QuizSession>): boolean {
+  joinQuiz(quizCode: string, playerId: string, playerName: string): boolean {
     const quiz = this.quizzes.get(quizCode);
     console.log(quizCode);
     console.log(quiz)
@@ -32,8 +32,8 @@ export class QuizSessionService {
     return false;
   }
 
-    startQuiz(quizCode: string, quizzes: Map<string, QuizSession>): any[] {
-        const quizSession: QuizSession = quizzes.get(quizCode);
+    startQuiz(quizCode: string): any[] {
+        const quizSession: QuizSession = this.quizzes.get(quizCode);
         const quiz = quizSession.quiz;
         if (quiz) {
             quizSession.hasStarted = true;
