@@ -13,6 +13,8 @@ export class QuizSession {
 
     players: Player[];
 
+    ownerSocketId?: string;
+
     constructor() {
         this.players = [];
     }

@@ -8,13 +8,17 @@ export class QuizSessionService {
 
     quizzes: Map<string, QuizSession> = new Map();
 
-    createQuiz(quizDto: CreateQuizSessionDto): string {
+    createQuiz(quizDto: CreateQuizSessionDto, ownerSocketId: string): string {
         const quizCode = uuidv4();
-        console.log(quizCode)
         const {quiz, owner} = quizDto;
-        console.log(quiz);
-        const quizSession: QuizSession = {quiz: quiz, quizCode: quizCode, owner: owner, hasStarted: false, players: []}
-        this.quizzes.set(quizCode, quizSession);
+        const quizSession: QuizSession = {
+            quiz: quiz,
+            quizCode: quizCode,
+            owner: owner,
+            hasStarted: false,
+            players: [],
+            ownerSocketId: ownerSocketId
+        }
         this.quizzes.set(quizCode, quizSession);
         return quizCode;
     }

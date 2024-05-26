@@ -27,8 +27,10 @@ export class QuizSessionGateway {
 
         if (result) {
             client.join(quizCode);
+            const quiz = this.quizSessionService.quizzes.get(quizCode);
             console.log("player joined", quizCode)
-            this.server.to(quizCode).emit('playerJoined', {id: client.id, playerName, avatar});
+            this.server.to(quiz.ownerSocketId).emit('playerJoined', {id: client.id, playerName, avatar});
+            this.server.to(client.id).emit('playerJoined', {id: client.id, playerName, avatar});
         } else {
             client.emit('errorMsg', 'Failed to join quiz.');
         }
@@ -73,16 +75,15 @@ export class QuizSessionGateway {
   }
 
 
-  sendLeaderboard(quizCode: string, leaderboard: any) {
-    this.server.to(quizCode).emit("leaderboard", leaderboard);
-  }
+    sendLeaderboard(quizCode: string, leaderboard: any) {
+        this.server.to(quizCode).emit("leaderboard", leaderboard);
+    }
 
-  @SubscribeMessage("createQuizSession")
-  handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket): any {
-    const session = this.quizSessionService.createQuiz(createQuizSessionDto);
-    client.emit("QuizCreationSuccess", `Quiz ${session} created successfully`);
-    return client.emit("createQuizSession", session);
-  }
+    @SubscribeMessage("createQuizSession") handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket): any {
+        const session = this.quizSessionService.createQuiz(createQuizSessionDto, client.id);
+        client.emit("QuizCreationSuccess", session);
+        return client.emit("createQuizSession", session);
+    }
 
   /*   @SubscribeMessage("findOneQuizSession")
      handleFindOneQuizSession(@MessageBody() code: string, @ConnectedSocket() client: Socket): void {
@@ -117,7 +118,7 @@ export class QuizSessionGateway {
     }
   }
 
-  endQuiz(quizCode: string, leaderboard: any): void {
-    this.sendLeaderboard(quizCode, leaderboard);
-  }
+    endQuiz(quizCode: string, leaderboard: any): void {
+        this.sendLeaderboard(quizCode, leaderboard);
+    }
 }
