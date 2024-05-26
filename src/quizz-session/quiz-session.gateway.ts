@@ -48,6 +48,7 @@ export class QuizSessionGateway {
     }
 
     const questions = quiz.quiz.questions;
+    console.log(quiz.quiz)
     const question = questions[questionNumber];
     if (!question) {
       this.server.to(quizCode).emit("error", `an error occurred while retrieving question ${questionNumber}`);
@@ -55,7 +56,7 @@ export class QuizSessionGateway {
       return;
     }
 
-    this.server.to(quizCode).emit("question", { question: question, questionNumber: questionNumber });
+    this.server.to(quizCode).emit("question", { quizCode: quizCode, question: question, questionNumber: questionNumber });
 
     // Schedule next question if it exists
     if (questionNumber + 1 < questions.length) {
@@ -73,7 +74,6 @@ export class QuizSessionGateway {
       }, 10000);
     }
   }
-
 
     sendLeaderboard(quizCode: string, leaderboard: any) {
         this.server.to(quizCode).emit("leaderboard", leaderboard);

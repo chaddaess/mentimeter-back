@@ -29,8 +29,9 @@ export class QuizzesService extends CrudService<Quiz> {
     }
 
     async addQuestions(questions: Question[]) {
+        console.log(questions);
         const savedQuestions: Question[] = await this.questionsRepository.save(questions); // Save questions in bulk
-
+        console.log(savedQuestions);
         // Prepare options for saving
         const optionsToSave: Option[] = [];
         for (const question of savedQuestions) {
