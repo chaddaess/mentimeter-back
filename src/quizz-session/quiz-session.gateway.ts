@@ -56,7 +56,7 @@ export class QuizSessionGateway {
       return;
     }
 
-    this.server.to(quizCode).emit("question", { question: question, questionNumber: questionNumber });
+    this.server.to(quizCode).emit("question", { quizCode: quizCode, question: question, questionNumber: questionNumber });
 
     // Schedule next question if it exists
     if (questionNumber + 1 < questions.length) {
