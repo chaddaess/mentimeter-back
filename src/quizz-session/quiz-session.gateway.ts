@@ -79,8 +79,10 @@ export class QuizSessionGateway {
         this.server.to(quizCode).emit("leaderboard", leaderboard);
     }
 
-    @SubscribeMessage("createQuizSession") handleCreateQuizSession(@MessageBody() createQuizSessionDto: any, @ConnectedSocket() client: Socket): any {
-        const session = this.quizSessionService.createQuiz(createQuizSessionDto, client.id);
+    @SubscribeMessage("createQuizSession")
+    async handleCreateQuizSession(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+        const {quizId, ownerId} = data;
+        const session = await this.quizSessionService.createQuiz(quizId, ownerId, client.id);
         client.emit("QuizCreationSuccess", session);
         return client.emit("createQuizSession", session);
     }

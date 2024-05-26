@@ -14,7 +14,7 @@ export class QuizzesService extends CrudService<Quiz> {
         super(quizRepository);
     }
 
-    async saveQuiz(createQuizDto: CreateQuizDto, userEmail) {
+    async saveQuiz(createQuizDto: CreateQuizDto, userEmail : string) {
         const quiz: Quiz = new Quiz();
         const user = await this.userRepository.findOne({where: {email: userEmail}});
         quiz.user = user;

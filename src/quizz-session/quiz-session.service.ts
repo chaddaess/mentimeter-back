@@ -2,15 +2,26 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import {CreateQuizSessionDto} from './dto/create-quiz-session.dto';
 import {v4 as uuidv4} from 'uuid';
 import {QuizSession} from "./entities/quiz-session.entity";
+import {QuizzesService} from "../quizzes/quizzes.service";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Quiz} from "../quizzes/entities/quiz.entity";
+import {Repository} from "typeorm";
+import {Question} from "../questions/entities/question.entity";
+import {Option} from "../options/entities/option.entity";
+import {User} from "../users/entities/user.entity";
+import {UsersService} from "../users/users.service";
 
 @Injectable()
 export class QuizSessionService {
 
     quizSessions: Map<string, QuizSession> = new Map();
-
-    createQuiz(quizDto: CreateQuizSessionDto, ownerSocketId: string): string {
+    constructor(@InjectRepository(Quiz) private quizRepository: Repository<Quiz>,
+                @InjectRepository(User) private userRepository: Repository<User>) {
+    }
+    async createQuiz(quizId: string, ownerId: string, ownerSocketId: string): Promise<string> {
         const quizCode = uuidv4();
-        const {quiz, owner} = quizDto;
+        const quiz = await this.quizRepository.findOne({where: {id: quizId}});
+        const owner = await this.userRepository.findOne({where: {id: ownerId}});
         const quizSession: QuizSession = {
             quiz: quiz,
             quizCode: quizCode,

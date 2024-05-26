@@ -4,39 +4,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
+import {CrudService} from "../common/service/crud.service";
+import {Question} from "../questions/entities/question.entity";
 
 @Injectable()
-export class UsersService {
+export class UsersService extends CrudService<User> {
+
   constructor(
     @InjectRepository(User)
-    private userRepository : Repository<User>
+      private userRepository : Repository<User>
   )
-  {}
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
-  getUserWithQuizzes(email:string){
-    let user=this.userRepository.findOne({
-      where: { email:email },
-      relations: ['quizzes'],
-    });
-    return user;
+  {
+    super(userRepository);
   }
 }

@@ -4,7 +4,7 @@ import { Quiz } from "../../quizzes/entities/quiz.entity";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
   @Column({ nullable: true })
   email: string;
