@@ -27,7 +27,7 @@ export class QuizSessionGateway {
 
         if (result) {
             client.join(quizCode);
-            const quiz = this.quizSessionService.quizzes.get(quizCode);
+            const quiz = this.quizSessionService.quizSessions.get(quizCode);
             console.log("player joined", quizCode)
             this.server.to(quiz.ownerSocketId).emit('playerJoined', {id: client.id, playerName, avatar});
             this.server.to(client.id).emit('playerJoined', {id: client.id, playerName, avatar});
@@ -40,7 +40,7 @@ export class QuizSessionGateway {
   sendQuestion(@MessageBody() data: any): void {
     const { quizCode, questionNumber } = data;
     console.log("fetching question 🤓:", questionNumber);
-    const quiz = this.quizSessionService.quizzes.get(quizCode);
+    const quiz = this.quizSessionService.quizSessions.get(quizCode);
     if (!quiz) {
       this.server.to(quizCode).emit("error", `can't fetch quiz, it has probably been deleted`);
       console.log("can't fetch quiz");
@@ -99,7 +99,7 @@ export class QuizSessionGateway {
   @SubscribeMessage("getAnswer")
   getAnswer(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
     let { quizCode, answer, questionNumber, playerPseudo } = data;
-    const quiz = this.quizSessionService.quizzes.get(quizCode);
+    const quiz = this.quizSessionService.quizSessions.get(quizCode);
     const questions = quiz.quiz.questions;
     if (questionNumber > questions.length || questionNumber < 0) {
       client.emit("getQuestion", "invalid request , check question number");

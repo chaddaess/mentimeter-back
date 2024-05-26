@@ -6,7 +6,7 @@ import {QuizSession} from "./entities/quiz-session.entity";
 @Injectable()
 export class QuizSessionService {
 
-    quizzes: Map<string, QuizSession> = new Map();
+    quizSessions: Map<string, QuizSession> = new Map();
 
     createQuiz(quizDto: CreateQuizSessionDto, ownerSocketId: string): string {
         const quizCode = uuidv4();
@@ -19,12 +19,12 @@ export class QuizSessionService {
             players: [],
             ownerSocketId: ownerSocketId
         }
-        this.quizzes.set(quizCode, quizSession);
+        this.quizSessions.set(quizCode, quizSession);
         return quizCode;
     }
 
     joinQuiz(quizCode: string, playerId: string, playerName: string, avatar: string): boolean {
-        const quiz = this.quizzes.get(quizCode);
+        const quiz = this.quizSessions.get(quizCode);
         if (quiz) {
             quiz.players.push({pseudo: playerName, avatar: avatar, answers: [], score: 0});
             return true;
@@ -33,7 +33,7 @@ export class QuizSessionService {
     }
 
     startQuiz(quizCode: string): any[] {
-        const quizSession: QuizSession = this.quizzes.get(quizCode);
+        const quizSession: QuizSession = this.quizSessions.get(quizCode);
         const quiz = quizSession.quiz;
         if (quiz) {
             quizSession.hasStarted = true;
@@ -43,7 +43,7 @@ export class QuizSessionService {
     }
 
     processLeaderboard(quizCode: string) {
-        const quizSession = this.quizzes.get(quizCode);
+        const quizSession = this.quizSessions.get(quizCode);
         if (quizSession) {
             const leaderboard = quizSession.players
                 .sort((a, b) => b.score - a.score)
@@ -86,7 +86,7 @@ export class QuizSessionService {
     // }
 
     findAll(): Map<string, QuizSession> {
-        return this.quizzes;
+        return this.quizSessions;
     }
 
     findOne(code: string, quizzes: Map<string, QuizSession>): QuizSession {
