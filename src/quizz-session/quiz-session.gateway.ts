@@ -43,23 +43,39 @@ export class QuizSessionGateway {
     const { quizCode, questionNumber } = data;
     console.log("fetching question 🤓:", questionNumber);
     const quiz = this.quizSessionService.quizzes.get(quizCode);
-    // console.log(quiz)
     if (!quiz) {
-      this.server.to(quizCode).emit("error", `can't fetch quiz, it  has probably been deleted`);
+      this.server.to(quizCode).emit("error", `can't fetch quiz, it has probably been deleted`);
       console.log("can't fetch quiz");
       return;
     }
 
-    const question = quiz.quiz.questions[questionNumber];
-    // console.log(question)
+    const questions = quiz.quiz.questions;
+    const question = questions[questionNumber];
     if (!question) {
-      // Handle error
-      this.server.to(quizCode).emit("error", `an error occured while retrieving question ${questionNumber}`);
+      this.server.to(quizCode).emit("error", `an error occurred while retrieving question ${questionNumber}`);
       console.log("can't fetch question");
       return;
     }
+
     this.server.to(quizCode).emit("question", { question: question, questionNumber: questionNumber });
+
+    // Schedule next question if it exists
+    if (questionNumber + 1 < questions.length) {
+      setTimeout(() => {
+        const nextQuestionNumber = questionNumber + 1;
+        const nextQuestionData = { quizCode: quizCode, questionNumber: nextQuestionNumber };
+        console.log("sending next question");
+        this.sendQuestion(nextQuestionData);
+      }, 10000);
+    } else {
+      // Last question, schedule quiz end after a delay
+      setTimeout(() => {
+        const resultArray = this.quizSessionService.processLeaderboard(quizCode);
+        this.server.to(quizCode).emit("endQuiz", resultArray);
+      }, 10000);
+    }
   }
+
 
   sendLeaderboard(quizCode: string, leaderboard: any) {
     this.server.to(quizCode).emit("leaderboard", leaderboard);
@@ -78,6 +94,10 @@ export class QuizSessionGateway {
          client.emit("sessionDetail", session);
      }
  */
+  getScore(validity: boolean, questionStartTime : number): number {
+    const timeLeft = Math.max(0, 20 - ((Date.now() - questionStartTime) / 1000));
+    return validity ? timeLeft * 10 : 0;
+  }
 
   @SubscribeMessage("getAnswer")
   getAnswer(@MessageBody() data: any, @ConnectedSocket() client: Socket): void {
@@ -91,15 +111,12 @@ export class QuizSessionGateway {
       const player = quiz.players.find(player => {
         return player.pseudo === playerPseudo;
       });
-      player.score += answer === question.correctAnswer ? 1 : 0;
-      if (questionNumber + 1 >= questions.length) {
+      const questionStartTime = Date.now();
+      const score = this.getScore(answer === question.correctAnswer, questionStartTime);
+      player.score+= score;
+      if (questionNumber + 1 > questions.length) {
         const resultArray = this.quizSessionService.processLeaderboard(quizCode);
         this.server.to(quizCode).emit("endQuiz", resultArray);
-      } else {
-        const nextQuestionNumber = questionNumber + 1;
-        const nextQuestionData = { quizCode: quizCode, questionNumber: nextQuestionNumber };
-        console.log("sending  next question");
-        this.sendQuestion(nextQuestionData);
       }
     }
   }
