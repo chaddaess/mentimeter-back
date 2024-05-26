@@ -10,7 +10,7 @@ export class Question {
   id: string;
 
   @Column()
-  text:string;
+  question:string;
 
   @DeleteDateColumn()
   deletedAt: Date;
