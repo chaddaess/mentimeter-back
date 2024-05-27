@@ -21,6 +21,7 @@ export class QuizSessionService {
     async createQuiz(quizId: string, ownerId: string, ownerSocketId: string): Promise<string> {
         const quizCode = uuidv4();
         const quiz = await this.quizRepository.createQueryBuilder('quiz')
+            .where('quiz.id = :id', { id : quizId })
             .leftJoinAndSelect('quiz.questions', 'question')
             .leftJoinAndSelect('question.options', 'option')
             .getOne()
